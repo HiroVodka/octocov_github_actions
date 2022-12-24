@@ -92,3 +92,8 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+require 'simplecov'
+
+SimpleCov.start do
+  enable_coverage :branch
+end
