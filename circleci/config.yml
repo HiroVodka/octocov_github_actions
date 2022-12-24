@@ -1,0 +1,38 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/ruby:3.1.2-node
+        environment:
+          RAILS_ENV: test
+          DATABASE_HOST: 127.0.0.1 
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_PASSWORD: ''
+          MYSQL_DATABASE: octocov_github_actions_test
+    working_directory: ~/octocov_github_actions
+    steps:
+      - checkout
+      - run:
+          name: "bundle install"
+          command: bundle install --path vendor/bundle
+      - run:
+          name: "waiting DB start"
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
+      - run:
+          name: "initialize DB"
+          command: |
+            bundle exec rake db:create
+            bundle exec rake db:migrate
+      - run:
+          name: RSpec
+          command: bundle exec rspec
+
+
+workflows:
+  version: 2
+  workflows:
+    jobs:
+      - test
