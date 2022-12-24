@@ -7,7 +7,7 @@ RSpec.describe 'Tweet', :type => :model do
       expect(tweet.valid?).to eq true
     end
 
-    it do
+    it '' do
       tweet = Tweet.new(content: nil)
       expect(tweet.valid?).to eq false
     end
